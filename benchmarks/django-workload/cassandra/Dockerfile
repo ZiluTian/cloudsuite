@@ -1,4 +1,4 @@
-FROM cloudsuite/cassandra
+FROM cloudsuite/cassandra:3.11.3
 
 
 COPY files/* /scripts/

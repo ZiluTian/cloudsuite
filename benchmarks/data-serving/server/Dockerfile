@@ -1,8 +1,10 @@
-FROM cloudsuite/cassandra
+FROM zilutian/cassandra 
 
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
-COPY files/* /scripts/
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["cassandra", "-R", "-f"]
 
-
-ENTRYPOINT ["/scripts/bootstrap.sh"]
+EXPOSE 7000 7001 7199 9042 9160
 

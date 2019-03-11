@@ -67,6 +67,5 @@ if [ "$1" = 'cassandra' ] || [ "$1" = 'bash' ]; then
         done
 fi
 
-exec "$@"
-
+exec "$@" 
 

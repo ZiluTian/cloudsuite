@@ -1,5 +1,4 @@
-FROM cloudsuite/java
-LABEL maintainer="Siddharth Gupta <siddharth.gupta@epfl.ch>"
+FROM zilutian/java-openjdk8 
 
 ENV SOLR_USER solr
 
@@ -10,7 +9,7 @@ RUN apt-get update -y \
 	&& useradd -r -g $SOLR_USER $SOLR_USER
 
 ENV BASE_PATH /usr/src
-ENV SOLR_VERSION 5.2.1
+ENV SOLR_VERSION 7.7.1
 ENV SOLR_HOME $BASE_PATH/solr-$SOLR_VERSION
 ENV PACKAGES_URL http://lsi-www.epfl.ch/parsa
 ENV INDEX_URL $PACKAGES_URL/index
@@ -28,11 +27,12 @@ ENV ZOOKEEPER_PORT $SOLR_PORT
 RUN 	mkdir -p $BASE_PATH/cloudsuite-web-search \
 	&& cd $BASE_PATH \ 
 	&& wget -O solr.tar.gz "archive.apache.org/dist/lucene/solr/$SOLR_VERSION/solr-$SOLR_VERSION.tgz" \
-	&& tar -zxf solr.tar.gz 
-
-RUN 	cd $SOLR_HOME/server/solr/configsets/basic_configs/conf \
-	&& wget $SCHEMA_URL -O schema.xml \
-	&& wget $SOLR_CONFIG_URL -O solrconfig.xml
+	&& tar -zxf solr.tar.gz \
+	&& rm solr.tar.gz  
+	
+RUN 	cd $SOLR_HOME/server/solr/configsets/_default/conf \
+	&& wget $SCHEMA_URL -O schema.xml 
+# 	&& wget $SOLR_CONFIG_URL -O solrconfig.xml
 
 #RELOAD CONFIGURATION
 RUN     cd $SOLR_HOME \

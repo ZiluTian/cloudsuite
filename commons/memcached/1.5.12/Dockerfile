@@ -29,7 +29,4 @@ RUN buildDeps='curl gcc libc6-dev libevent-dev make perl' \
 	&& cd / && rm -rf /usr/src/memcached \
 	&& apt-get purge -y --auto-remove $buildDeps
 
-ENTRYPOINT ["memcached"]
-
-USER memcache
 EXPOSE 11211

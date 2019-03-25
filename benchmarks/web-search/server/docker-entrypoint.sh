@@ -12,6 +12,7 @@ export SERVER_HEAP_SIZE=$1 \
 #Prepare Solr
 INDEX_PATH=/home/solr/index_data
 
+sed -ri 's/-Xss256k/-Xss512k/' "$SOLR_HOME/bin/solr"
 
 if [[ "$#" -ne 2 && $3 == 'generate' ]]; then
     $SOLR_HOME/bin/solr start -cloud -p $SOLR_PORT -s $SOLR_CORE_DIR -m $SERVER_HEAP_SIZE 

@@ -1,0 +1,14 @@
+/usr/src/faban/master/bin/startup.sh: 25: /usr/src/faban/master/bin/startup.sh: [[: not found
+/usr/src/faban/master/bin/catalina.sh: 130: /usr/src/faban/master/bin/catalina.sh: 1: not found
+Exception in thread "main" java.lang.StringIndexOutOfBoundsException: String index out of range: -16
+	at java.lang.AbstractStringBuilder.substring(AbstractStringBuilder.java:935)
+	at java.lang.StringBuilder.substring(StringBuilder.java:76)
+	at setup.UserGenerator.updateElggTokenAndTs(UserGenerator.java:39)
+	at setup.UserGenerator.createUsers(UserGenerator.java:103)
+	at setup.UserGenerator.main(UserGenerator.java:147)
+
+BUILD FAILED
+/web20_benchmark/build.xml:81: Java returned: 1
+
+Total time: 14 seconds
+cat: '/usr/src/faban/output/*/summary.xml': No such file or directory

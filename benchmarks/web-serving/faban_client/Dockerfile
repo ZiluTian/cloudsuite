@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
 COPY files/web20_benchmark /web20_benchmark
 WORKDIR /web20_benchmark
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
+
 # Build the Faban benchmark and the user-generation tool
 RUN sed -i "s@faban\.home.*@faban.home=$FABAN_HOME@" /web20_benchmark/build.properties
 RUN ant deploy.jar

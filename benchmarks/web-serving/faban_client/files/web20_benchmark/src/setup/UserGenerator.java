@@ -33,19 +33,19 @@ public class UserGenerator {
 	}
 	
 	private void updateElggTokenAndTs(Pair<String, String> p, StringBuilder sb) {
-        // Get the token values
-        int elggTokenStartIndex = sb.indexOf("\"__elgg_token\":\"") + "\"__elgg_token\":\"".length();
-        int elggTokenEndIndex = sb.indexOf("\"", elggTokenStartIndex);
-        String elggToken = sb.substring(elggTokenStartIndex, elggTokenEndIndex);
-        //System.out.println("Elgg Token = "+elggToken);
-        
-        int elggTsStartIndex = sb.indexOf("\"__elgg_ts\":") + "\"__elgg_ts\":".length();
-        int elggTsEndIndex = sb.indexOf(",", elggTsStartIndex);
-        String elggTs = sb.substring(elggTsStartIndex, elggTsEndIndex);
-        //System.out.println("Elgg Ts = "+elggTs);
-        
-        p.setValue1(elggToken);
-        p.setValue2(elggTs);
+		// Get the token values
+		int elggTokenStartIndex = sb.indexOf("\"__elgg_token\":\"") + "\"__elgg_token\":\"".length();
+		int elggTokenEndIndex = sb.indexOf("\"", elggTokenStartIndex);
+		String elggToken = sb.substring(elggTokenStartIndex, elggTokenEndIndex);
+		System.out.println("Elgg Token = "+elggToken);
+		
+		int elggTsStartIndex = sb.indexOf("\"__elgg_ts\":") + "\"__elgg_ts\":".length();
+		int elggTsEndIndex = sb.indexOf(",", elggTsStartIndex);
+		String elggTs = sb.substring(elggTsStartIndex, elggTsEndIndex);
+		System.out.println("Elgg Ts = "+elggTs);
+		
+		p.setValue1(elggToken);
+		p.setValue2(elggTs);
 	}
 
 	private void loadProperties() throws IOException {
@@ -53,7 +53,7 @@ public class UserGenerator {
 		properties = new Properties();
 		String propFileName = "usersetup.properties";
 		
-		InputStream inputStream = new FileInputStream("/faban/"+propFileName);
+		InputStream inputStream = new FileInputStream(System.getenv("FABAN_HOME")+"/"+propFileName);
 		
 		if (null != inputStream) {
 			properties.load(inputStream);
@@ -149,7 +149,7 @@ public class UserGenerator {
 	}
 
 	private void writeUserFile() throws FileNotFoundException {
-		String outputFile = "/faban/"+properties.getProperty("output_file").trim();
+		String outputFile = System.getenv("FABAN_HOME")+"/"+properties.getProperty("output_file").trim();
 		
 		
 		PrintWriter pw = new PrintWriter(outputFile);

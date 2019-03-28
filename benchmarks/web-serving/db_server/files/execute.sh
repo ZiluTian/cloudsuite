@@ -2,6 +2,8 @@
 set -x
 set root_password=$1
 
+chown -R mysql:mysql /var/lib/mysql /var/run/mysqld
+
 service mysql restart
 
 # Wait for mysql to come up

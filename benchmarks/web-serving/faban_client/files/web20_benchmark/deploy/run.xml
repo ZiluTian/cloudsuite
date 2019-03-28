@@ -2,7 +2,7 @@
 <webbenchmark>
 	<jvmConfig xmlns="http://faban.sunsource.net/ns/fabanharness">
 		<!-- The harness launches Java based on this JAVA_HOME -->
-		<javaHome>/usr/lib/jvm/java-7-openjdk-amd64</javaHome>
+		<javaHome>/usr/lib/jvm/java-8-openjdk-amd64</javaHome>
 		<jvmOptions>-Xmx1g -Xms256m -XX:+DisableExplicitGC</jvmOptions>
 	</jvmConfig>
 	<fa:runConfig definition="workload.driver.Web20Driver"

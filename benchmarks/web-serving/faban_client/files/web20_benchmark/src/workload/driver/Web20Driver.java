@@ -105,8 +105,8 @@ import workload.driver.Web20Client.ClientState;
 		 cycleType = CycleType.THINKTIME)
 
 */
-@FixedTime(cycleTime = 10000,
-	cycleType = CycleType.THINKTIME, cycleDeviation = 1000)
+@FixedTime(cycleTime = 2000,
+	cycleType = CycleType.THINKTIME, cycleDeviation = 10)
 // cycle time or think time - count from the start of prev operation or end
 
 /**

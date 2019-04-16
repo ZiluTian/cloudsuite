@@ -36,8 +36,6 @@
             <include name="**/*.java" />
             <classpath refid="classpath"/>
         </javac>
-    	<copy file="${src.dir}/users.txt" todir="${classes.dir}" />
-    	<copy file="${src.dir}/users.xml" todir="${classes.dir}" />
     </target>
 
     <target name="clean" description="cleanup module">

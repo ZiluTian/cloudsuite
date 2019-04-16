@@ -25,8 +25,6 @@ public class Web20Client {
 
 	private HttpTransport http;
 	
-	private List<String> chatSessionList; // List of guids of chat sessions of this client. 
-	
 	public enum ClientState {
 		LOGGED_IN,
 		LOGGED_OUT
@@ -100,14 +98,6 @@ public class Web20Client {
 	
 	public void setClientState(ClientState clientState) {
 		this.clientState = clientState;
-	}
-
-	public List<String> getChatSessionList() {
-		return chatSessionList;
-	}
-
-	public void setChatSessionList(List<String> chatSessionList) {
-		this.chatSessionList = chatSessionList;
 	}
 
 	public boolean isLoggedIn() {

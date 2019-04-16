@@ -33,13 +33,14 @@ public class UserGenerator {
 		tokenTsPair = new Pair<String, String>();
 	}
 
+/*
 	private void logOutput(String logFileName, StringBuilder out) throws FileNotFoundException {
 		PrintWriter pw = new PrintWriter(System.getenv("FABAN_HOME")+"/UserGeneratorLog/"+logFileName);
 		pw.println(out.toString());
 		pw.flush(); 
 		pw.close();   
 	}
-
+*/ 
 	private static String updateMatch(StringBuilder sb, String pattern, String terminator) throws NoMatchException {
 		// helper function for updateElggTokenAndTs
 		if (sb.indexOf(pattern)==-1) {
@@ -128,19 +129,17 @@ public class UserGenerator {
 		headers.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"); 
 
 		sb = http.fetchURL(hostURL+"/action/login", loginPostRequest, headers);
-		logOutput("LOGIN", sb); 		
+		// logOutput("LOGIN", sb); 		
 		sb = http.fetchURL(hostURL+"/activity");
-		logOutput("ACTIVITY", sb); 
+		// logOutput("ACTIVITY", sb); 
 		updateElggTokenAndTs(tokenTsPair, sb);
 	
-		// System.out.println("Check if the connection follows redirects "+ http.isFollowRedirects()); 	
-
 		// headers.put("Referer", hostURL+"/activity");
 		// sb = http.fetchURL(hostURL+"/admin", headers);
 		sb = http.fetchURL(hostURL+"/admin"); 
 
 		// System.out.println("Response code of the last request is " + http.getResponseCode()); 
-		logOutput("ADMIN", sb); 
+		// logOutput("ADMIN", sb); 
 		updateElggTokenAndTs(tokenTsPair, sb);
 		
 		i = 0;
@@ -148,7 +147,7 @@ public class UserGenerator {
 			// headers.put("Referer", hostURL+"/admin");
 			// sb = http.fetchURL(hostURL+"/admin/users/add", headers);
 			sb = http.fetchURL(hostURL+"/admin/users/add"); 
-			logOutput("ADD", sb); 
+			// logOutput("ADD", sb); 
 			updateElggTokenAndTs(tokenTsPair, sb);
 
 			String postRequest = "__elgg_token="+tokenTsPair.getValue1()+"&__elgg_ts="
@@ -156,9 +155,12 @@ public class UserGenerator {
 					+"&password2="+user.getPassword()+"&admin=0";
 			headers.put("Referer", hostURL+"/admin/users/add");
 			sb = http.fetchURL(hostURL+"/action/useradd", postRequest, headers);
-			logOutput("ADDUSER", sb);
+			// logOutput("ADDUSER", sb);
+			// StringBuilder dump = new StringBuilder(http.dumpResponseHeaders()); 
+
+			// logOutput("AddUserResponseHeader", dump); 
 			sb = http.fetchURL(hostURL+"/admin/users/newest");
-			logOutput("NEWEST", sb);
+			// logOutput("NEWEST", sb);
 
 			String guidPattern = "data-elgg-guid=\"";
 			if (sb.indexOf(guidPattern)==-1){

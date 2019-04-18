@@ -19,6 +19,7 @@ import com.sun.faban.driver.HttpTransport;
  * @author Tapti Palit
  *
  */
+
 public class UserGenerator {
 	
 	private String hostURL;
@@ -31,21 +32,35 @@ public class UserGenerator {
 		hostURL = host;
 		tokenTsPair = new Pair<String, String>();
 	}
-	
-	private void updateElggTokenAndTs(Pair<String, String> p, StringBuilder sb) {
+
+/*
+	private void logOutput(String logFileName, StringBuilder out) throws FileNotFoundException {
+		PrintWriter pw = new PrintWriter(System.getenv("FABAN_HOME")+"/UserGeneratorLog/"+logFileName);
+		pw.println(out.toString());
+		pw.flush(); 
+		pw.close();   
+	}
+*/ 
+	private static String updateMatch(StringBuilder sb, String pattern, String terminator) throws NoMatchException {
+		// helper function for updateElggTokenAndTs
+		if (sb.indexOf(pattern)==-1) {
+			throw new NoMatchException("No match found for pattern: " + pattern); 
+		} else {
+			int startIndex = sb.indexOf(pattern) + pattern.length();
+			int endIndex = sb.indexOf(terminator, startIndex);
+			return sb.substring(startIndex, endIndex);		
+		}
+	} 
+
+	private static void updateElggTokenAndTs(Pair<String, String> p, StringBuilder sb) throws NoMatchException {
 		// Get the token values
-		int elggTokenStartIndex = sb.indexOf("\"__elgg_token\":\"") + "\"__elgg_token\":\"".length();
-		int elggTokenEndIndex = sb.indexOf("\"", elggTokenStartIndex);
-		String elggToken = sb.substring(elggTokenStartIndex, elggTokenEndIndex);
-		System.out.println("Elgg Token = "+elggToken);
-		
-		int elggTsStartIndex = sb.indexOf("\"__elgg_ts\":") + "\"__elgg_ts\":".length();
-		int elggTsEndIndex = sb.indexOf(",", elggTsStartIndex);
-		String elggTs = sb.substring(elggTsStartIndex, elggTsEndIndex);
-		System.out.println("Elgg Ts = "+elggTs);
-		
-		p.setValue1(elggToken);
-		p.setValue2(elggTs);
+		String tokenPattern = "\"__elgg_token\":\""; 
+		String token = updateMatch(sb, tokenPattern, "\""); 
+		p.setValue1(token); 
+
+		String tsPattern = "\"__elgg_ts\":"; 
+		String ts = updateMatch(sb, tsPattern, ","); 
+		p.setValue2(ts);
 	}
 
 	private void loadProperties() throws IOException {
@@ -85,7 +100,7 @@ public class UserGenerator {
 		}
 	}
 	
-	private void createUsers() throws Exception {
+	private void createUsers() throws Exception, NoMatchException{
 		int i = 0;
 		
 		HttpTransport http = HttpTransport.newInstance();
@@ -102,29 +117,37 @@ public class UserGenerator {
 		// Get the token values
 		updateElggTokenAndTs(tokenTsPair, sb);
 
-		String loginPostRequest="__elgg_token="+tokenTsPair.getValue1()+"&__elgg_ts="+tokenTsPair.getValue2()+"&username=admin&password=admin1234";
+		String adminUsername = "root"; 
+		String adminPass = "cloudsuite-root"; 
+		String loginPostRequest="__elgg_token="+tokenTsPair.getValue1()+"&__elgg_ts="+tokenTsPair.getValue2()+"&username="+adminUsername+"&password="+adminPass;
 		
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 		headers.put("Accept-Language", "en-US,en;q=0.5");
 		headers.put("Accept-Encoding", "gzip, deflate");
-		headers.put("Referer", hostURL+"/admin/users/add");
-		headers.put("User-Agent", "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:33.0) Gecko/20100101 Firefox/33.0");
+		// headers.put("Referer", hostURL+"/admin/users/add");
+		headers.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"); 
 
 		sb = http.fetchURL(hostURL+"/action/login", loginPostRequest, headers);
+		// logOutput("LOGIN", sb); 		
 		sb = http.fetchURL(hostURL+"/activity");
-		// Update token
+		// logOutput("ACTIVITY", sb); 
+		updateElggTokenAndTs(tokenTsPair, sb);
+	
+		// headers.put("Referer", hostURL+"/activity");
+		// sb = http.fetchURL(hostURL+"/admin", headers);
+		sb = http.fetchURL(hostURL+"/admin"); 
+
+		// System.out.println("Response code of the last request is " + http.getResponseCode()); 
+		// logOutput("ADMIN", sb); 
 		updateElggTokenAndTs(tokenTsPair, sb);
 		
-		headers.put("Referer", hostURL+"/activity");
-		sb = http.fetchURL(hostURL+"/admin", headers);
-			
-		updateElggTokenAndTs(tokenTsPair, sb);
-
 		i = 0;
 		for (UserEntity user: userList) {
-			headers.put("Referer", hostURL+"/admin");
-			sb = http.fetchURL(hostURL+"/admin/users/add", headers);
+			// headers.put("Referer", hostURL+"/admin");
+			// sb = http.fetchURL(hostURL+"/admin/users/add", headers);
+			sb = http.fetchURL(hostURL+"/admin/users/add"); 
+			// logOutput("ADD", sb); 
 			updateElggTokenAndTs(tokenTsPair, sb);
 
 			String postRequest = "__elgg_token="+tokenTsPair.getValue1()+"&__elgg_ts="
@@ -132,10 +155,24 @@ public class UserGenerator {
 					+"&password2="+user.getPassword()+"&admin=0";
 			headers.put("Referer", hostURL+"/admin/users/add");
 			sb = http.fetchURL(hostURL+"/action/useradd", postRequest, headers);
-			int startIndex = sb.indexOf("GUID#")+"GUID#".length();
-			int endIndex = sb.indexOf("#", startIndex);
-			String guid = sb.substring(startIndex, endIndex);
-			user.setGuid(guid);
+			// logOutput("ADDUSER", sb);
+			// StringBuilder dump = new StringBuilder(http.dumpResponseHeaders()); 
+
+			// logOutput("AddUserResponseHeader", dump); 
+			sb = http.fetchURL(hostURL+"/admin/users/newest");
+			// logOutput("NEWEST", sb);
+
+			String guidPattern = "data-elgg-guid=\"";
+			if (sb.indexOf(guidPattern)==-1){
+				throw new NoMatchException("No match found for guid!"); 
+			} else {
+				// The first guid is for the new user. Want the second match
+				int firstGUID = sb.indexOf(guidPattern) + guidPattern.length();
+				int startIndex = sb.indexOf(guidPattern, firstGUID)+guidPattern.length();
+				int endIndex = sb.indexOf("\"", startIndex);
+				String guid = sb.substring(startIndex, endIndex);
+				user.setGuid(guid);
+			}
 			System.out.println("User"+i+++" generated.");
 		}
 	}
@@ -158,8 +195,6 @@ public class UserGenerator {
 		}
 		pw.flush();
 		pw.close();
-
-		
 	}
 	
 	/*
@@ -307,6 +342,12 @@ class Pair<E, F> {
 	public void setValue2(F value2) {
 		this.value2 = value2;
 	}
-	
-	
 }
+
+//zt Throw an error if any of the pattern not found to prevent gibberish result
+class NoMatchException extends Exception {
+	public NoMatchException(String s) {
+		super(s); 
+	}
+} 
+

@@ -32,16 +32,19 @@ if [[ "$#" -ne 2 && $3 == 'generate' ]]; then
 	status=`curl -s "http://localhost:8983/solr/index_creator/dataimport?command=status" | sed -n 's/^ *\"status\":\"//p'  | sed 's/".*//'`
     done
 
-    mkdir $INDEX_PATH
-    mv $SOLR_CORE_DIR/index_creator_shard1_replica_n1/data $INDEX_PATH/data
-    $SOLR_HOME/bin/solr delete -c index_creator
+    # mkdir $INDEX_PATH
+    # mv $SOLR_CORE_DIR/index_creator_shard1_replica_n1/data $INDEX_PATH/data
+
+    echo $INDEX_PATH | xargs -n 1 cp -r $SOLR_CORE_DIR/index_creator_shard1_replica_n1/data
+
+    # $SOLR_HOME/bin/solr delete -c index_creator
     $SOLR_HOME/bin/solr stop -all
 fi
 
-if [ ! -d $INDEX_PATH/data ]; then
-	echo "$INDEX_PATH/data/ not found!"
-	exit 1
-fi 
+# if [ ! -d $INDEX_PATH/data ]; then
+#	echo "$INDEX_PATH/data/ not found!"
+#	exit 1
+# fi 
 
 $SOLR_HOME/bin/solr start -cloud -p $SOLR_PORT -s $SOLR_CORE_DIR -m $SERVER_HEAP_SIZE 
 $SOLR_HOME/bin/solr status

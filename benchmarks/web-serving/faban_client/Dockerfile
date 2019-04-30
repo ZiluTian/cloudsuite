@@ -1,4 +1,4 @@
-FROM zilutian/faban
+FROM zilutian/faban:amd64
 
 RUN apt-get update && apt-get install -y ant vim\
 	&& rm -rf /var/lib/apt/lists/*  

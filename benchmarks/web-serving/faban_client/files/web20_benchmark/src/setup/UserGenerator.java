@@ -117,8 +117,8 @@ public class UserGenerator {
 		// Get the token values
 		updateElggTokenAndTs(tokenTsPair, sb);
 
-		String adminUsername = "root"; 
-		String adminPass = "cloudsuite-root"; 
+		String adminUsername = "cloudsuite"; 
+		String adminPass = "cloudsuite_pwd"; 
 		String loginPostRequest="__elgg_token="+tokenTsPair.getValue1()+"&__elgg_ts="+tokenTsPair.getValue2()+"&username="+adminUsername+"&password="+adminPass;
 		
 		Map<String, String> headers = new HashMap<String, String>();

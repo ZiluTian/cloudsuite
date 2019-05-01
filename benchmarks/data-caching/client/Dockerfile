@@ -1,4 +1,4 @@
-FROM zilutian/memcached:amd64  
+FROM zilutian/memcached  
 LABEL maintainer="Arash Pourhabibi Zarandi <arash.pourhabibi@epfl.ch>"
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added

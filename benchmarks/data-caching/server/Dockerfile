@@ -1,4 +1,4 @@
-FROM cloudsuite/memcached
+FROM zilutian/memcached
 
 ENTRYPOINT ["memcached"]
 

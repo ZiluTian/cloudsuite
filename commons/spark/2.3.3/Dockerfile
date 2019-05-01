@@ -2,11 +2,20 @@ FROM zilutian/java-openjdk8
 
 # Install dependencies
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
+      gnupg2 \
       libblas3 \
       libgfortran3 \
       liblapack3 \
       curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install sbt 
+RUN set -x \
+    && apt-get update -y && apt-get install -y \
+    && echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823 \
+    && apt-get update -y && apt-get install -y --no-install-recommends sbt \
+    && rm -rf /var/lib/apt/lists/* 
 
 ENV SPARK_VERSION 2.3.3
 ENV HADOOP_VERSION 2.7

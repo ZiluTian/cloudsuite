@@ -1,15 +1,9 @@
-FROM ubuntu:16.04
+FROM zilutian/memcached:amd64  
 LABEL maintainer="Arash Pourhabibi Zarandi <arash.pourhabibi@epfl.ch>"
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-RUN groupadd -r memcache && useradd -r -g memcache memcache
-
-ENV DEBIAN_FRONTEND noninteractive
 
 COPY memcached.tar.gz /memcached.tar.gz
-
-RUN apt-get update && apt-get install -y libevent-2.0-5 vim --no-install-recommends \
-	&& rm -rf /var/lib/apt/lists/*
 
 RUN buildDeps='curl gcc libc6-dev libevent-dev make' \
 	&& set -x \

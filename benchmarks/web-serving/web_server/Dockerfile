@@ -1,14 +1,11 @@
-FROM ubuntu:18.04
-LABEL maintainer="Mark Sutherland <mark.sutherland@epfl.ch>"
+FROM zilutian/nginx
 
-ENV PHP_VERSION 7.2
 ENV ELGG_VERSION 2.3.8
+ENV PHP_VERSION 7.2
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
-	build-essential \
 	git \
-	nginx \
 	wget \
 	unzip \
 	mysql-client \

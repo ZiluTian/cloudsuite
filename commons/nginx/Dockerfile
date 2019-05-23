@@ -1,0 +1,11 @@
+FROM ubuntu:18.04
+
+ENV PHP_VERSION 7.2
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  nginx \  
+	&& rm -rf /var/lib/apt/lists/*
+
+

@@ -1,4 +1,7 @@
 FROM ubuntu:14.04
+
+# Use 14.04 for gcc4.8, recent version of gcc causes makefile compilation failure 
+
 #Original maintainer: MAINTAINER Tapti Palit <tpalit@cs.stonybrook.edu>
 MAINTAINER Alexandros Daglis <alexandros.daglis@epfl.ch>
 

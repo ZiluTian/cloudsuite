@@ -114,7 +114,7 @@ $CONFIG->memcache = true;
 
 $CONFIG->memcache_servers = array (
 //	array('server1', 11211),
-	array('memcache_server', 11211)
+	array('127.0.0.1', 11211)
 );
 
 // namespace prefix

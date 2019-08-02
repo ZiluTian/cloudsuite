@@ -28,7 +28,6 @@ object MovieLensALS {
 
     val conf = new SparkConf()
       .setAppName("MovieLensALS")
-      .set("spark.executor.memory", "2g")
     val sc = new SparkContext(conf)
 
     // time the execution

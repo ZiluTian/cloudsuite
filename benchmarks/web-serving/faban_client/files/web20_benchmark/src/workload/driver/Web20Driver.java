@@ -632,7 +632,7 @@ public class Web20Driver {
 			http = HttpTransport.newInstance();
 			tempClient.setHttp(http);
 
-			logger.fine(context.getThreadId() +" : Doing operation: register");
+			logger.info(context.getThreadId() +" : Doing operation: register");
 
 			// Navigate to the home page
 	

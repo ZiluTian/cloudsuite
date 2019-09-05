@@ -10,8 +10,8 @@ export HOST_IP=$(echo `hostname`) \
 #Read client parameters
 export SCALE=$2 \
   && export RAMP_UP=$3 \
-  && export RAMP_DOWN=$4 \
-  && export STEADY_STATE=$5
+  && export STEADY_STATE=$4
+  && export RAMP_DOWN=$5 
 
 #PREPARE
 $FABAN_HOME/master/bin/startup.sh
